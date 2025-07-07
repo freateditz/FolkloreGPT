@@ -51,6 +51,7 @@ function App() {
               <Route path="/submit" element={<Submit />} />
               <Route path="/about" element={<About />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
           <Footer />
