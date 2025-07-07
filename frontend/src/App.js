@@ -35,11 +35,14 @@ function App() {
   }, []);
 
   return (
-    <div className="App min-h-screen bg-gradient-to-b from-amber-50 to-orange-50">
+    <div className="App min-h-screen relative overflow-x-hidden">
+      {/* Global background with fixed positioning */}
+      <div className="fixed inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 -z-10"></div>
+      
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen relative">
           <Header />
-          <main className="flex-grow">
+          <main className="flex-grow relative">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/stories" element={<Stories />} />
