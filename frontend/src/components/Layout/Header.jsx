@@ -34,6 +34,7 @@ const Header = () => {
     { name: 'Listen', href: '/listen', icon: Headphones },
     { name: 'Share Story', href: '/submit', icon: Mic },
     { name: 'About', href: '/about', icon: Heart },
+    { name: 'Contact', href: '/contact', icon: Settings },
   ];
 
   const isActive = (path) => location.pathname === path;
