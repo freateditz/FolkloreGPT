@@ -1,37 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const AnimatedBackground = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Animated Gradient Background */}
-      <div 
-        className="absolute inset-0 opacity-30"
-        style={{
-          background: `
-            radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-              rgba(245, 158, 11, 0.15) 0%, 
-              rgba(251, 146, 60, 0.1) 25%, 
-              rgba(239, 68, 68, 0.05) 50%, 
-              transparent 70%
-            )
-          `,
-          transition: 'background 0.3s ease'
-        }}
-      />
+      {/* Static Gradient Background */}
+      <div className="absolute inset-0 opacity-20 bg-gradient-to-br from-amber-100/50 via-orange-100/30 to-red-100/50" />
       
       {/* Floating Orbs */}
       <div className="absolute inset-0">
