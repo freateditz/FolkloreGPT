@@ -31,7 +31,6 @@ import {
   Sun,
   Monitor
 } from 'lucide-react';
-import { mockLanguages, mockVoiceSettings } from '../utils/mockData';
 
 const Settings = () => {
   const [settings, setSettings] = useState({
