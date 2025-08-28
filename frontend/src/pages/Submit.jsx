@@ -9,32 +9,8 @@ import { Badge } from '../components/ui/badge';
 import { Checkbox } from '../components/ui/checkbox';
 import { Progress } from '../components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { 
-  Upload, 
-  Mic, 
-  MicOff, 
-  Play, 
-  Pause, 
-  StopCircle, 
-  FileText, 
-  Image, 
-  Heart, 
-  Shield, 
-  CheckCircle, 
-  AlertCircle,
-  Loader2,
-  X,
-  FileAudio,
-  Camera,
-  Sparkles,
-  Star,
-  Globe,
-  BookOpen,
-  Users,
-  Zap,
-  Volume2
-} from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
+import { useData } from '../components/DataManager';
 import { mockCultures, mockLanguages, mockCategories } from '../utils/mockData';
 
 // Import animated components
