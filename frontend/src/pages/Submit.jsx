@@ -13,6 +13,32 @@ import { useToast } from '../hooks/use-toast';
 import { useData } from '../components/DataManager';
 import { mockCultures, mockLanguages, mockCategories } from '../utils/mockData';
 
+import { 
+  Upload, 
+  Mic, 
+  MicOff, 
+  Play, 
+  Pause, 
+  StopCircle, 
+  FileText, 
+  Image, 
+  Heart, 
+  Shield, 
+  CheckCircle, 
+  AlertCircle,
+  Loader2,
+  X,
+  FileAudio,
+  Camera,
+  Sparkles,
+  Star,
+  Globe,
+  BookOpen,
+  Users,
+  Zap,
+  Volume2
+} from 'lucide-react';
+
 // Import animated components
 import ScrollAnimationWrapper from '../components/ScrollAnimationWrapper';
 import InteractiveCard from '../components/InteractiveCard';
