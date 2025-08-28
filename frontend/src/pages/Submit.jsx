@@ -164,43 +164,73 @@ const Submit = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate submission process with animation
-    for (let i = 0; i <= 100; i += 10) {
-      setUploadProgress(i);
-      await new Promise(resolve => setTimeout(resolve, 200));
+    try {
+      // Prepare submission data
+      const submissionData = {
+        ...formData,
+        activeTab,
+        recordings: recordings.map(r => ({ ...r, url: r.url || null })),
+        images: images.map(img => ({ ...img, url: img.url || null })),
+        submissionType: activeTab,
+        mediaFiles: {
+          recordings: recordings.length,
+          images: images.length
+        }
+      };
+
+      // Simulate submission process with animation
+      for (let i = 0; i <= 100; i += 10) {
+        setUploadProgress(i);
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      
+      // Save to local storage
+      const savedSubmission = await saveSubmission(submissionData);
+      
+      if (savedSubmission) {
+        toast({
+          title: "✨ Story submitted successfully!",
+          description: `Your story "${formData.title}" has been saved locally and will be synced with the database when connected.`,
+        });
+        
+        // Reset form after successful submission
+        setFormData({
+          title: '',
+          culture: '',
+          language: '',
+          region: '',
+          category: '',
+          ageGroup: '',
+          difficulty: '',
+          description: '',
+          storyText: '',
+          moral: '',
+          tags: [],
+          narrator: '',
+          submitterName: '',
+          submitterEmail: '',
+          culturalContext: '',
+          permissions: false,
+          attribution: false,
+          respectfulUse: false
+        });
+        setRecordings([]);
+        setImages([]);
+        setActiveTab('text');
+      } else {
+        throw new Error('Failed to save submission');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast({
+        title: "❌ Submission failed",
+        description: "There was an error saving your story. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+      setUploadProgress(0);
     }
-    
-    toast({
-      title: "✨ Story submitted successfully!",
-      description: "Your story has been submitted for review and will be available soon.",
-    });
-    
-    setIsSubmitting(false);
-    setUploadProgress(0);
-    
-    // Reset form
-    setFormData({
-      title: '',
-      culture: '',
-      language: '',
-      region: '',
-      category: '',
-      ageGroup: '',
-      difficulty: '',
-      description: '',
-      storyText: '',
-      moral: '',
-      tags: [],
-      narrator: '',
-      submitterName: '',
-      submitterEmail: '',
-      culturalContext: '',
-      permissions: false,
-      attribution: false,
-      respectfulUse: false
-    });
-    setRecordings([]);
-    setImages([]);
   };
 
   const formatTime = (seconds) => {
