@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "./components/ui/toaster";
+import ErrorBoundary from "./components/ui/error-boundary";
+import { DataProvider } from "./components/DataManager";
 
 // Layout Components
 import Header from "./components/Layout/Header";
