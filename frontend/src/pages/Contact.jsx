@@ -28,7 +28,6 @@ import {
   Twitter,
   Linkedin
 } from 'lucide-react';
-import { useToast } from '../hooks/use-toast';
 
 // Import animated components
 import ScrollAnimationWrapper from '../components/ScrollAnimationWrapper';
