@@ -33,6 +33,9 @@ import {
 } from 'lucide-react';
 
 const Settings = () => {
+  const { toast } = useToast();
+  const { settings: savedSettings, saveSettings } = useData();
+  
   const [settings, setSettings] = useState({
     // Voice Settings
     voiceSpeed: mockVoiceSettings.speed,
@@ -66,8 +69,18 @@ const Settings = () => {
     displayName: 'Story Lover',
     email: 'user@example.com',
     preferredCultures: ['Khasi', 'Maori'],
-    interests: ['Creation Myths', 'Nature Stories']
+    interests: ['Creation Myths', 'Nature Stories'],
+    
+    // Override with saved settings
+    ...savedSettings
   });
+
+  // Load saved settings on component mount
+  useEffect(() => {
+    if (savedSettings && Object.keys(savedSettings).length > 0) {
+      setSettings(prev => ({ ...prev, ...savedSettings }));
+    }
+  }, [savedSettings]);
 
   const { toast } = useToast();
 
