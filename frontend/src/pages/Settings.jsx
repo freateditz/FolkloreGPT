@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -8,6 +8,9 @@ import { Switch } from '../components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Slider } from '../components/ui/slider';
 import { Badge } from '../components/ui/badge';
+import { useToast } from '../hooks/use-toast';
+import { useData } from '../components/DataManager';
+import { mockLanguages, mockVoiceSettings } from '../utils/mockData';
 import { 
   Settings as SettingsIcon, 
   User, 
