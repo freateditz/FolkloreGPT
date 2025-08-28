@@ -60,25 +60,48 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "✨ Message sent successfully!",
-        description: "Thank you for reaching out. We'll get back to you within 24 hours.",
-      });
-      setIsSubmitting(false);
+    try {
+      // Save contact submission to local storage
+      const contactSubmission = {
+        ...formData,
+        submittedAt: new Date().toISOString(),
+        type: 'contact_form'
+      };
       
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        category: '',
-        message: '',
-        culture: '',
-        consent: false
+      // Simulate form submission delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const savedContact = await saveContact(contactSubmission);
+      
+      if (savedContact) {
+        toast({
+          title: "✨ Message sent successfully!",
+          description: "Thank you for reaching out. Your message has been saved and we'll get back to you within 24 hours.",
+        });
+        
+        // Reset form after successful submission
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          category: '',
+          message: '',
+          culture: '',
+          consent: false
+        });
+      } else {
+        throw new Error('Failed to save contact submission');
+      }
+    } catch (error) {
+      console.error('Contact submission error:', error);
+      toast({
+        title: "❌ Submission failed",
+        description: "There was an error sending your message. Please try again.",
+        variant: "destructive"
       });
-    }, 2000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
