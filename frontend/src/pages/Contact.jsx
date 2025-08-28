@@ -48,7 +48,6 @@ const Contact = () => {
     consent: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
