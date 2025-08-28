@@ -1,0 +1,17 @@
+{
+  "description": "Local contact form submissions storage",
+  "lastUpdated": "2025-01-28",
+  "contacts": [],
+  "metadata": {
+    "totalContacts": 0,
+    "lastContactId": 0,
+    "categories": [
+      "general",
+      "technical_support", 
+      "partnership",
+      "story_submission_help",
+      "feedback",
+      "other"
+    ]
+  }
+}
