@@ -82,8 +82,6 @@ const Settings = () => {
     }
   }, [savedSettings]);
 
-  const { toast } = useToast();
-
   const handleSettingChange = (key, value) => {
     setSettings(prev => ({
       ...prev,
