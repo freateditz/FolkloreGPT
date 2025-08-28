@@ -3,15 +3,78 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-// Import and initialize ResizeObserver fix
+// Import and initialize ResizeObserver fix BEFORE anything else
 import initializeResizeObserverFix from "./lib/resizeObserverFix";
 
-// Initialize the ResizeObserver error fix
+// Initialize the ResizeObserver error fix immediately
 initializeResizeObserverFix();
+
+// Additional error boundary for the entire application
+class GlobalErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Check if it's a ResizeObserver error
+    if (error.message && error.message.includes('ResizeObserver')) {
+      return null; // Don't update state for ResizeObserver errors
+    }
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Filter out ResizeObserver errors
+    if (error.message && error.message.includes('ResizeObserver')) {
+      return; // Don't log ResizeObserver errors
+    }
+    console.error('Global error caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ 
+          padding: '20px', 
+          textAlign: 'center',
+          backgroundColor: '#fef2f2',
+          color: '#b91c1c',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column'
+        }}>
+          <h1>Something went wrong</h1>
+          <p>Please refresh the page and try again.</p>
+          <button 
+            onClick={() => window.location.reload()}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#dc2626',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              marginTop: '10px'
+            }}
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <GlobalErrorBoundary>
+      <App />
+    </GlobalErrorBoundary>
   </React.StrictMode>,
 );
