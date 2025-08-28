@@ -75,6 +75,7 @@ const Submit = () => {
   const [recordings, setRecordings] = useState([]);
   const [images, setImages] = useState([]);
   const { toast } = useToast();
+  const { saveSubmission } = useData(); // Use the data manager
 
   const ageGroups = ['Children', 'Young Adults', 'Adults', 'All Ages'];
   const difficulties = ['Easy', 'Medium', 'Hard'];
