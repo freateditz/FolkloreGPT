@@ -3,10 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-// Import and initialize ResizeObserver fix BEFORE anything else
+// Import and initialize ULTIMATE ResizeObserver fix BEFORE anything else
+import initializeUltimateResizeObserverFix from "./lib/ultimateResizeObserverFix";
 import initializeResizeObserverFix from "./lib/resizeObserverFix";
 
-// Initialize the ResizeObserver error fix immediately
+// Initialize BOTH fixes for maximum coverage
+initializeUltimateResizeObserverFix();
 initializeResizeObserverFix();
 
 // Additional error boundary for the entire application
