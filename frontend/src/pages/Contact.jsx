@@ -36,6 +36,8 @@ import AnimatedText from '../components/AnimatedText';
 import FloatingElements from '../components/FloatingElements';
 
 const Contact = () => {
+  const { toast } = useToast();
+  const { saveContact } = useData(); // Use the data manager
   const [formData, setFormData] = useState({
     name: '',
     email: '',
