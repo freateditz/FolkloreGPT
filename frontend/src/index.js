@@ -3,13 +3,24 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-// Import and initialize ULTIMATE ResizeObserver fix BEFORE anything else
-import initializeUltimateResizeObserverFix from "./lib/ultimateResizeObserverFix";
-import initializeResizeObserverFix from "./lib/resizeObserverFix";
+// Simple and safe ResizeObserver error suppression
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  if (typeof args[0] === 'string' && args[0].includes('ResizeObserver')) {
+    return; // Suppress ResizeObserver errors only
+  }
+  originalConsoleError.apply(console, args);
+};
 
-// Initialize BOTH fixes for maximum coverage
-initializeUltimateResizeObserverFix();
-initializeResizeObserverFix();
+// Simple error handler for ResizeObserver errors
+window.addEventListener('error', (e) => {
+  if (e.message && e.message.includes('ResizeObserver')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+console.log('✅ Simple ResizeObserver error suppression initialized');
 
 // Additional error boundary for the entire application
 class GlobalErrorBoundary extends React.Component {
