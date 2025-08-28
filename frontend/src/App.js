@@ -38,30 +38,34 @@ function App() {
   }, []);
 
   return (
-    <div className="App min-h-screen relative overflow-x-hidden">
-      {/* Global background with fixed positioning */}
-      <div className="fixed inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 -z-10"></div>
-      
-      <BrowserRouter>
-        <div className="flex flex-col min-h-screen relative">
-          <Header />
-          <main className="flex-grow relative">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/stories" element={<Stories />} />
-              <Route path="/story/:id" element={<StoryDetail />} />
-              <Route path="/listen" element={<Listen />} />
-              <Route path="/submit" element={<Submit />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
-          </main>
-          <Footer />
+    <ErrorBoundary>
+      <DataProvider>
+        <div className="App min-h-screen relative overflow-x-hidden">
+          {/* Global background with fixed positioning */}
+          <div className="fixed inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 -z-10"></div>
+          
+          <BrowserRouter>
+            <div className="flex flex-col min-h-screen relative">
+              <Header />
+              <main className="flex-grow relative">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/stories" element={<Stories />} />
+                  <Route path="/story/:id" element={<StoryDetail />} />
+                  <Route path="/listen" element={<Listen />} />
+                  <Route path="/submit" element={<Submit />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/contact" element={<Contact />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </BrowserRouter>
+          <Toaster />
         </div>
-      </BrowserRouter>
-      <Toaster />
-    </div>
+      </DataProvider>
+    </ErrorBoundary>
   );
 }
 
