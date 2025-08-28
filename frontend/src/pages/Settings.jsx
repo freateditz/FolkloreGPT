@@ -31,7 +31,6 @@ import {
   Sun,
   Monitor
 } from 'lucide-react';
-import { useToast } from '../hooks/use-toast';
 import { mockLanguages, mockVoiceSettings } from '../utils/mockData';
 
 const Settings = () => {
