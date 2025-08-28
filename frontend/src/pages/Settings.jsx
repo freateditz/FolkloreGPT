@@ -89,12 +89,25 @@ const Settings = () => {
     }));
   };
 
-  const handleSaveSettings = () => {
-    // Simulate saving settings
-    toast({
-      title: "Settings saved",
-      description: "Your preferences have been updated successfully.",
-    });
+  const handleSaveSettings = async () => {
+    try {
+      const savedSettings = await saveSettings(settings);
+      if (savedSettings) {
+        toast({
+          title: "Settings saved",
+          description: "Your preferences have been updated and saved locally.",
+        });
+      } else {
+        throw new Error('Failed to save settings');
+      }
+    } catch (error) {
+      console.error('Settings save error:', error);
+      toast({
+        title: "Save failed",
+        description: "There was an error saving your settings. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleResetSettings = () => {
