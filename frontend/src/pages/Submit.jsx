@@ -583,59 +583,25 @@ const Submit = () => {
                   <CardContent className="space-y-6">
                     {/* Enhanced Recording Interface */}
                     <ScrollAnimationWrapper animation="scaleIn" delay={100}>
-                      <InteractiveCard className="text-center p-8 bg-gradient-to-br from-red-50/80 to-pink-50/80">
-                        <div className="mb-6">
-                          <div className="relative inline-block">
-                            {/* Recording button with enhanced effects */}
-                            <div className={`absolute inset-0 rounded-full transition-all duration-500 ${
-                              isRecording 
-                                ? 'bg-red-400 animate-ping scale-150' 
-                                : 'bg-red-400 animate-pulse scale-125'
-                            } opacity-30 blur-xl`}></div>
-                            
-                            <Button
-                              type="button"
-                              size="lg"
-                              onClick={isRecording ? handleStopRecording : handleStartRecording}
-                              className={`relative w-24 h-24 rounded-full text-white shadow-2xl transition-all duration-500 hover:shadow-3xl transform hover:scale-110 ${
-                                isRecording 
-                                  ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse' 
-                                  : 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600'
-                              }`}
-                            >
-                              {isRecording ? (
-                                <MicOff className="w-10 h-10 animate-pulse" />
-                              ) : (
-                                <Mic className="w-10 h-10" />
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <AnimatedText
-                          text={isRecording ? '🔴 Recording...' : '🎙️ Click to start recording'}
-                          className="text-amber-800 font-medium mb-2 text-lg"
-                          animation="pulse"
+                      <div className="text-center p-4">
+                        <h4 className="font-medium text-amber-800 mb-4">Record Your Story</h4>
+                        <AudioRecorder 
+                          onRecordingComplete={handleRecordingComplete}
+                          maxDuration={600} // 10 minutes
                         />
-                        
-                        {isRecording && (
-                          <p className="text-red-600 font-semibold animate-pulse">
-                            Recording time: {formatTime(recordingTime)}
-                          </p>
-                        )}
-                      </InteractiveCard>
+                      </div>
                     </ScrollAnimationWrapper>
 
-                    {/* Existing Recordings with enhanced animations */}
-                    {recordings.length > 0 && (
+                    {/* Existing Recordings */}
+                    {audioFiles.length > 0 && (
                       <ScrollAnimationWrapper animation="slideUp" delay={300}>
                         <div>
                           <h4 className="font-medium text-amber-800 mb-4 flex items-center gap-2">
                             <FileAudio className="w-5 h-5 animate-pulse" />
-                            Your Recordings
+                            Your Recordings ({audioFiles.length})
                           </h4>
                           <div className="space-y-3">
-                            {recordings.map((recording, index) => (
+                            {audioFiles.map((recording, index) => (
                               <ScrollAnimationWrapper key={recording.id} animation="fadeInLeft" delay={index * 100}>
                                 <InteractiveCard className="p-4" tiltIntensity={5}>
                                   <div className="flex items-center justify-between">
@@ -645,7 +611,9 @@ const Submit = () => {
                                       </div>
                                       <div>
                                         <p className="font-medium text-amber-800">{recording.name}</p>
-                                        <p className="text-sm text-amber-600">{formatTime(recording.duration)} • {recording.size}</p>
+                                        <p className="text-sm text-amber-600">
+                                          {formatTime(recording.duration)} • {(recording.size / 1024 / 1024).toFixed(1)} MB
+                                        </p>
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -653,16 +621,7 @@ const Submit = () => {
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        onClick={() => setIsPlaying(!isPlaying)}
-                                        className="text-amber-600 hover:scale-110 transition-transform duration-300"
-                                      >
-                                        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                                      </Button>
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => setRecordings(prev => prev.filter(r => r.id !== recording.id))}
+                                        onClick={() => removeAudioFile(recording.id)}
                                         className="text-red-600 hover:scale-110 transition-transform duration-300"
                                       >
                                         <X className="w-4 h-4" />
@@ -690,13 +649,35 @@ const Submit = () => {
                             accept="audio/*"
                             multiple
                             className="hidden"
+                            id="audio-upload"
                             onChange={(e) => {
+                              const files = Array.from(e.target.files);
+                              files.forEach(file => {
+                                const audioData = {
+                                  id: Date.now() + Math.random(),
+                                  file: file,
+                                  name: file.name,
+                                  duration: 0, // Will be determined during upload
+                                  size: file.size
+                                };
+                                setAudioFiles(prev => [...prev, audioData]);
+                              });
+                              
                               toast({
                                 title: "🎵 Audio uploaded",
-                                description: "Your audio file has been uploaded successfully",
+                                description: `${files.length} audio file(s) have been uploaded successfully`,
                               });
                             }}
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="border-amber-300/50 text-amber-700 hover:bg-amber-100/50 transition-all duration-300 hover:scale-110 mt-4"
+                            onClick={() => document.getElementById('audio-upload').click()}
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Choose Audio Files
+                          </Button>
                         </InteractiveCard>
                       </div>
                     </ScrollAnimationWrapper>
