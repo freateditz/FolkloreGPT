@@ -42,9 +42,112 @@ const Stories = () => {
   const [sortBy, setSortBy] = useState('recent');
   const [viewMode, setViewMode] = useState('stories');
   const [hoveredStory, setHoveredStory] = useState(null);
+  
+  // Database state
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  
+  const { toast } = useToast();
 
+  // Fetch stories from database
+  useEffect(() => {
+    fetchStories();
+    fetchStats();
+  }, []);
+
+  const fetchStories = async (reset = false) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const currentPage = reset ? 1 : page;
+      const params = {
+        page: currentPage,
+        limit: 20,
+        status: 'approved'
+      };
+      
+      if (selectedCategory !== 'all') params.category = selectedCategory;
+      if (selectedCulture !== 'all') params.culture = selectedCulture;
+
+      const response = await storyService.getStories(params);
+      
+      if (response.success) {
+        if (reset) {
+          setStories(response.stories);
+          setPage(1);
+        } else {
+          setStories(prev => [...prev, ...response.stories]);
+        }
+        
+        setHasMore(response.pagination.current < response.pagination.total);
+        console.log(`📚 Loaded ${response.stories.length} stories from database`);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (err) {
+      console.error('❌ Error fetching stories:', err);
+      setError(err.message || 'Failed to load stories');
+      
+      // Fallback to mock data
+      if (stories.length === 0) {
+        setStories(mockStories);
+        toast({
+          title: "⚠️ Using offline data",
+          description: "Couldn't connect to server, showing sample stories.",
+          variant: "default"
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await storyService.getStoryStats();
+      if (response.success) {
+        setStats(response.stats);
+      }
+    } catch (err) {
+      console.error('❌ Error fetching stats:', err);
+    }
+  };
+
+  const loadMore = () => {
+    if (!loading && hasMore) {
+      setPage(prev => prev + 1);
+      fetchStories();
+    }
+  };
+
+  const handleFilterChange = () => {
+    setPage(1);
+    fetchStories(true);
+  };
+
+  // Filter stories client-side for search and language
   const filteredStories = useMemo(() => {
-    let filtered = mockStories;
+    let filtered = stories;
+
+    if (searchTerm) {
+      filtered = filtered.filter(story => 
+        story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        story.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        story.culture.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (story.tags && story.tags.some(tag => 
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        ))
+      );
+    }
+
+    if (selectedLanguage !== 'all') {
+      filtered = filtered.filter(story => story.language === selectedLanguage);
+    }
 
     if (searchTerm) {
       filtered = filtered.filter(story => 
