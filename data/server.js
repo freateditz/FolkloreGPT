@@ -45,13 +45,24 @@ app.post("/api/contact", async (req, res) => {
 
 app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
 
+// ✅ Story Schema & model (collection = Stories)
+const storySchema = new mongoose.Schema({
+  title: String,
+  content: String,
+  author: String,
+  culture: String,
+  category: String,
+  tags: [String],
+  submittedAt: String,
+}, { collection: "Stories" });
+
+const Story = mongoose.model("Story", storySchema);
+
 app.post("/api/stories", async (req, res) => {
   try {
-    const db = client.db("FLOKlore");
-    const storiesCollection = db.collection("Stories");
-
-    const result = await storiesCollection.insertOne(req.body);
-    res.status(201).json({ message: "Story saved", id: result.insertedId });
+    const story = new Story(req.body);
+    const result = await story.save();
+    res.status(201).json({ message: "Story saved", id: result._id });
   } catch (error) {
     console.error("Error saving story:", error);
     res.status(500).json({ message: "Error saving story" });
