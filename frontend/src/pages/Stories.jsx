@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -19,9 +19,14 @@ import {
   Headphones,
   Sparkles,
   Volume2,
-  Eye
+  Eye,
+  Loader2,
+  AlertCircle,
+  RefreshCw
 } from 'lucide-react';
 import { mockStories, mockCultures, mockCategories, mockLanguages } from '../utils/mockData';
+import storyService from '../services/storyService';
+import { useToast } from '../hooks/use-toast';
 
 // Import animated components
 import ScrollAnimationWrapper from '../components/ScrollAnimationWrapper';
