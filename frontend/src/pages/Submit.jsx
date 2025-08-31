@@ -159,32 +159,41 @@ const Submit = () => {
     setIsSubmitting(true);
     
     try {
-      // Prepare submission data
-      const submissionData = {
+      // Prepare story data
+      const storyData = {
         ...formData,
-        activeTab,
-        recordings: recordings.map(r => ({ ...r, url: r.url || null })),
-        images: images.map(img => ({ ...img, url: img.url || null })),
         submissionType: activeTab,
-        mediaFiles: {
-          recordings: recordings.length,
-          images: images.length
-        }
       };
 
-      // Simulate submission process with animation
-      for (let i = 0; i <= 100; i += 10) {
-        setUploadProgress(i);
-        await new Promise(resolve => setTimeout(resolve, 200));
-      }
-      
-      // Save to local storage
-      const savedSubmission = await saveSubmission(submissionData);
-      
-      if (savedSubmission) {
+      // Extract actual files from the file objects
+      const audioFilesToUpload = audioFiles.map(audio => audio.file);
+      const imageFilesToUpload = imageFiles.map(image => image.file);
+
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 200);
+
+      // Submit to database
+      const result = await storyService.submitStory(
+        storyData, 
+        audioFilesToUpload, 
+        imageFilesToUpload
+      );
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      if (result.success) {
         toast({
           title: "✨ Story submitted successfully!",
-          description: `Your story "${formData.title}" has been saved locally and will be synced with the database when connected.`,
+          description: `Your story "${formData.title}" has been submitted and is pending review.`,
         });
         
         // Reset form after successful submission
@@ -208,19 +217,39 @@ const Submit = () => {
           attribution: false,
           respectfulUse: false
         });
-        setRecordings([]);
-        setImages([]);
+        setAudioFiles([]);
+        setImageFiles([]);
         setActiveTab('text');
       } else {
-        throw new Error('Failed to save submission');
+        throw new Error(result.message || 'Failed to submit story');
       }
     } catch (error) {
       console.error('Submission error:', error);
-      toast({
-        title: "❌ Submission failed",
-        description: "There was an error saving your story. Please try again.",
-        variant: "destructive"
-      });
+      
+      // Save to localStorage as fallback
+      try {
+        const submissionData = {
+          ...formData,
+          activeTab,
+          audioFiles: audioFiles.map(audio => ({ ...audio, file: null })), // Can't store File objects
+          imageFiles: imageFiles.map(img => ({ ...img, file: null })),     // Can't store File objects
+          submissionType: activeTab,
+        };
+        
+        await saveSubmission(submissionData);
+        
+        toast({
+          title: "⚠️ Saved locally",
+          description: "Couldn't connect to server, but your story has been saved locally.",
+          variant: "destructive"
+        });
+      } catch (fallbackError) {
+        toast({
+          title: "❌ Submission failed",
+          description: error.message || "There was an error saving your story. Please try again.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsSubmitting(false);
       setUploadProgress(0);
