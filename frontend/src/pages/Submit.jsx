@@ -103,59 +103,54 @@ const Submit = () => {
     }));
   };
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setRecordingTime(0);
-    
-    // Simulate recording timer
-    const interval = setInterval(() => {
-      setRecordingTime(prev => prev + 1);
-    }, 1000);
-    
-    setTimeout(() => {
-      clearInterval(interval);
-      setIsRecording(false);
-      setRecordings(prev => [...prev, {
-        id: Date.now(),
-        duration: recordingTime,
-        name: `Recording ${prev.length + 1}`,
-        size: '2.4 MB'
-      }]);
-      toast({
-        title: "🎙️ Recording saved",
-        description: "Your story recording has been saved successfully",
-      });
-    }, 5000);
-  };
-
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    setRecordings(prev => [...prev, {
+  const handleRecordingComplete = (audioFile, duration) => {
+    const recordingData = {
       id: Date.now(),
-      duration: recordingTime,
-      name: `Recording ${prev.length + 1}`,
-      size: '2.4 MB'
-    }]);
+      file: audioFile,
+      name: `Recording ${audioFiles.length + 1}`,
+      duration: duration,
+      size: audioFile.size
+    };
+    
+    setAudioFiles(prev => [...prev, recordingData]);
+    
     toast({
-      title: "⏹️ Recording stopped",
-      description: "Your recording has been saved",
+      title: "🎙️ Recording saved",
+      description: "Your story recording has been saved successfully",
     });
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     files.forEach(file => {
-      setImages(prev => [...prev, {
+      const imageData = {
         id: Date.now() + Math.random(),
+        file: file,
         name: file.name,
         size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
         type: file.type,
         url: URL.createObjectURL(file)
-      }]);
+      };
+      setImageFiles(prev => [...prev, imageData]);
     });
+    
     toast({
       title: "📸 Images uploaded",
       description: `${files.length} image(s) added to your story`,
+    });
+  };
+
+  const removeAudioFile = (id) => {
+    setAudioFiles(prev => prev.filter(audio => audio.id !== id));
+  };
+
+  const removeImageFile = (id) => {
+    setImageFiles(prev => {
+      const fileToRemove = prev.find(img => img.id === id);
+      if (fileToRemove && fileToRemove.url) {
+        URL.revokeObjectURL(fileToRemove.url);
+      }
+      return prev.filter(img => img.id !== id);
     });
   };
 
