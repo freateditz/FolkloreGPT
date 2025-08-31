@@ -12,11 +12,9 @@ app.use(express.json());
 
 // ✅ Connect to MongoDB Atlas using environment variable
 const mongoUri = process.env.ATLAS_URI + "FLOKlore?retryWrites=true&w=majority";
-mongoose.connect(mongoUri, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-}).then(() => console.log("✅ MongoDB connected"))
- .catch(err => console.error("❌ MongoDB connection error:", err));
+mongoose.connect(mongoUri)
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
 
 // ✅ Schema & model (collection = Contact)
 const contactSchema = new mongoose.Schema({
