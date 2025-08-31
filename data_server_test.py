@@ -178,22 +178,35 @@ class FolkloreDataServerTester:
 
     def test_get_stories(self):
         """Test retrieving stories"""
+        # First try to get all stories including pending ones
         success, response = self.run_test(
-            "Get Stories",
+            "Get All Stories (including pending)",
             "GET",
-            "stories",
+            "stories?status=pending",
             200
         )
         
         if success and response:
             stories = response.get('stories', [])
-            print(f"📚 Retrieved {len(stories)} stories")
+            print(f"📚 Retrieved {len(stories)} pending stories")
+            
+        # Then try the default approved stories
+        success2, response2 = self.run_test(
+            "Get Approved Stories",
+            "GET", 
+            "stories",
+            200
+        )
+        
+        if success2 and response2:
+            stories2 = response2.get('stories', [])
+            print(f"📚 Retrieved {len(stories2)} approved stories")
             
             # Check pagination info
-            pagination = response.get('pagination', {})
+            pagination = response2.get('pagination', {})
             print(f"📄 Pagination: {pagination}")
         
-        return success, response
+        return success and success2, response2
 
     def test_get_stories_with_filters(self):
         """Test retrieving stories with filters"""
