@@ -750,10 +750,10 @@ const Submit = () => {
                     </ScrollAnimationWrapper>
 
                     {/* Preview Images with animations */}
-                    {images.length > 0 && (
+                    {imageFiles.length > 0 && (
                       <ScrollAnimationWrapper animation="slideUp" delay={500}>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {images.map((image, index) => (
+                          {imageFiles.map((image, index) => (
                             <ScrollAnimationWrapper key={image.id} animation="scaleIn" delay={index * 100}>
                               <InteractiveCard className="relative group overflow-hidden" tiltIntensity={10}>
                                 <img
@@ -766,7 +766,7 @@ const Submit = () => {
                                   variant="ghost"
                                   size="sm"
                                   className="absolute top-1 right-1 text-red-600 bg-white/80 hover:bg-white transition-all duration-300 hover:scale-110"
-                                  onClick={() => setImages(prev => prev.filter(img => img.id !== image.id))}
+                                  onClick={() => removeImageFile(image.id)}
                                 >
                                   <X className="w-4 h-4" />
                                 </Button>
