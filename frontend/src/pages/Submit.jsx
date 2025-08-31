@@ -49,9 +49,6 @@ import FloatingElements from '../components/FloatingElements';
 
 const Submit = () => {
   const [activeTab, setActiveTab] = useState('text');
-  const [isRecording, setIsRecording] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -74,10 +71,10 @@ const Submit = () => {
     attribution: false,
     respectfulUse: false
   });
-  const [recordings, setRecordings] = useState([]);
-  const [images, setImages] = useState([]);
+  const [audioFiles, setAudioFiles] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
   const { toast } = useToast();
-  const { saveSubmission } = useData(); // Use the data manager
+  const { saveSubmission } = useData(); // Keep as fallback
 
   const ageGroups = ['Children', 'Young Adults', 'Adults', 'All Ages'];
   const difficulties = ['Easy', 'Medium', 'Hard'];
