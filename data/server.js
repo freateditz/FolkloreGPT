@@ -1,16 +1,21 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config({ path: "./config.env" });
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Connect to MongoDB Atlas
-mongoose.connect(
-  "mongodb+srv://vivekmathur:mongodb.vivek@cluster0.7yzmozt.mongodb.net/FLOKlore?retryWrites=true&w=majority",
-  { useNewUrlParser: true, useUnifiedTopology: true }
-).then(() => console.log("✅ MongoDB connected"))
+// ✅ Connect to MongoDB Atlas using environment variable
+const mongoUri = process.env.ATLAS_URI + "FLOKlore?retryWrites=true&w=majority";
+mongoose.connect(mongoUri, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+}).then(() => console.log("✅ MongoDB connected"))
  .catch(err => console.error("❌ MongoDB connection error:", err));
 
 // ✅ Schema & model (collection = Contact)
