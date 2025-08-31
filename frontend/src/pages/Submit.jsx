@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { useToast } from '../hooks/use-toast';
 import { useData } from '../components/DataManager';
 import { mockCultures, mockLanguages, mockCategories } from '../utils/mockData';
+import AudioRecorder from '../components/AudioRecorder';
+import storyService from '../services/storyService';
 
 import { 
   Upload, 
